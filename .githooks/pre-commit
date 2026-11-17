@@ -1,0 +1,14 @@
+#!/bin/sh
+# Regenerates slides/index.html (sorted by date, newest first) and stages it.
+set -e
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+
+if ! command -v cargo >/dev/null 2>&1; then
+  echo "pre-commit: cargo not found; cannot update slides/index.html" >&2
+  exit 1
+fi
+
+cargo run --quiet --release --manifest-path tools/slide-index/Cargo.toml -- slides
+git add slides/index.html
